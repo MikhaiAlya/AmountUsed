@@ -198,6 +198,7 @@
         <button onclick="sendData()">追加する</button>
         <div id="message"></div>
 
+        <div id="loading" class="result">ロード中</div>
         <div id="list"></div>
         <div id="total" class="result"></div>
 
@@ -232,9 +233,21 @@
         }
 
         function loadData() {
+            const loading = document.getElementById("loading");
+            loading.style.display = "block";
+
+            dotCount = 0;
+            loadingTimer = setInterval(() => {
+                dotCount = (dotCount + 1) % 4;
+                loading.innerText = "ロード中" + ".".repeat(dotCount);
+            }, 500);
+
             fetch(url)
                 .then(res => res.json())
                 .then(data => {
+                    clearInterval(loadingTimer);
+                    loading.style.display = "none";
+
                     let html = "";
                     let total = 0;
 
@@ -242,17 +255,17 @@
                         const item = row[0];
                         const price = Number(row[1]);
 
-                        if (!item || isNaN(price)) return; // ← 重要
+                        if (!item || !price) return;
 
                         html += `
-    <div class="list-item">
-      <div>
-        <div>${item}</div>
-        <div>${price.toLocaleString()}円</div>
-      </div>
-      <button class="delete-btn" onclick="deleteRow(${index}, this)">×</button>
-    </div>
-  `;
+                  <div class="list-item">
+                    <div>
+                      <div>${item}</div>
+                      <div>${price.toLocaleString()}円</div>
+                    </div>
+                    <button class="delete-btn" onclick="deleteRow(${index + 2})">×</button>
+                  </div>
+                `;
 
                         total += price;
                     });
