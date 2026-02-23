@@ -206,7 +206,7 @@
     </div>
 
     <script>
-        const url = "https://script.google.com/macros/s/AKfycbxUsjw4q_2GilWJbXqflusDYwEq_srPQE9hZ_wNqcLrqunENfbd8_ZGKUkuLEH-zInELg/exec"; // GASのURL
+        const url = "https://script.google.com/macros/s/AKfycbzsfnmSEurYlyabkhlcCqKlI46SQCcopPWYcukkAkSXk3_ArDVTM0E01BaRDok0f4d2JQ/exec"; // GASのURL
 
         function sendData() {
             const title = document.getElementById("title").value;
@@ -214,6 +214,11 @@
 
             if (!title || !price) {
                 alert("件名と金額を入力してください");
+                return;
+            }
+
+            if (isNaN(price) || price <= 0) {
+                alert("金額は数字で入力してください");
                 return;
             }
 
@@ -263,7 +268,7 @@
                       <div>${item}</div>
                       <div>${price.toLocaleString()}円</div>
                     </div>
-                    <button class="delete-btn" onclick="deleteRow(${index + 2})">×</button>
+                    <button class="delete-btn" onclick="deleteRow(${index + 2}, this)">×</button>
                   </div>
                 `;
 
